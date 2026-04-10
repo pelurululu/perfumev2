@@ -20,17 +20,6 @@
 
 <div class="page-wrap">
 
-  <!-- Search Bar -->
-  <div class="search-bar-wrapper" style="padding:20px 40px 0;display:flex;justify-content:flex-end;">
-    <div class="search-bar">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input type="text" id="search-input" placeholder="Cari wangian..." autocomplete="off">
-      <button id="search-clear" style="display:none" onclick="clearSearch()">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
-  </div>
-
   <!-- PRODUCTS -->
   <section class="products-section">
     <div class="products-count" id="products-count"></div>
