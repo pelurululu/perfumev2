@@ -84,7 +84,7 @@
   margin-bottom: 24px;
   letter-spacing: .04em;
 }
-.products-grid {
+.products-grid, #products-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1px;
@@ -241,7 +241,7 @@
 .pm-overlay {
   position: fixed; inset: 0;
   background: rgba(0,0,0,.45);
-  z-index: 1100;
+  z-index: 1200;
   opacity: 0;
   pointer-events: none;
   transition: opacity .28s;
@@ -591,95 +591,4 @@
   max-width: 300px;
 }
 
-/* ================================================
-   FLAT PRODUCT GRID
-================================================ */
-#products-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1px;
-  background: var(--line);
-  border: 1px solid var(--line);
-}
-
-.family-section {
-  border-bottom: 1px solid var(--line);
-  padding: 32px 0 28px;
-}
-.family-section:last-child {
-  border-bottom: none;
-}
-
-.family-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 20px;
-}
-.family-header-left {
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-}
-.family-name {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 22px;
-  font-weight: 300;
-  color: var(--ink);
-  letter-spacing: -.01em;
-}
-.family-count {
-  font-size: 11px;
-  color: var(--muted2);
-  letter-spacing: .04em;
-}
-.family-see-all {
-  background: none;
-  border: 1px solid var(--line);
-  padding: 7px 16px;
-  font-size: 11px;
-  letter-spacing: .06em;
-  color: var(--muted);
-  cursor: pointer;
-  white-space: nowrap;
-  font-family: 'DM Sans', sans-serif;
-  transition: border-color .15s, color .15s;
-  flex-shrink: 0;
-}
-.family-see-all:hover {
-  border-color: var(--ink);
-  color: var(--ink);
-}
-
-/* The row holding product cards — single card by default */
-.family-product-row {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1px;
-  background: var(--line);
-  border: 1px solid var(--line);
-}
-/* When expanded, show all cards in same 4-col grid */
-.family-product-row.expanded {
-  grid-template-columns: repeat(4, 1fr);
-}
-
-/* ================================================
-   RESPONSIVE — FAMILY SECTIONS
-================================================ */
-@media (max-width: 1100px) {
-  .family-product-row,
-  .family-product-row.expanded { grid-template-columns: repeat(3, 1fr); }
-}
-@media (max-width: 760px) {
-  .family-section { padding: 24px 0 20px; }
-  .family-name { font-size: 18px; }
-  .family-product-row,
-  .family-product-row.expanded { grid-template-columns: repeat(2, 1fr); }
-}
-@media (max-width: 480px) {
-  .family-header { flex-direction: column; align-items: flex-start; gap: 8px; }
-  .family-product-row,
-  .family-product-row.expanded { grid-template-columns: repeat(2, 1fr); }
-}
+/* pm-footer sits above product grid */
