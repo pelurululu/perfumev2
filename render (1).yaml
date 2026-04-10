@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: artisan-parfum
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    # Render injects $PORT automatically — the Dockerfile handles it
+
+    envVars:
+      - key: ADMIN_PASSWORD
+        sync: false          # set manually in Render dashboard
+
+      - key: SB_SERVICE_KEY
+        sync: false          # Supabase service role key
+
+      - key: TP_SECRET_KEY
+        sync: false          # ToyyibPay secret key
+
+      - key: TP_CATEGORY_CODE
+        sync: false          # ToyyibPay category code
+
+      - key: BREVO_API_KEY
+        sync: false          # Brevo (email) API key
