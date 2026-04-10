@@ -220,33 +220,9 @@ function renderGrid() {
     return;
   }
 
-  /* Group by family, preserving insertion order */
-  const familyMap = new Map();
-  filtered.forEach(p => {
-    const key = p.family || 'Lain-lain';
-    if (!familyMap.has(key)) familyMap.set(key, []);
-    familyMap.get(key).push(p);
-  });
+  document.getElementById('products-count').textContent = `${filtered.length} wangian`;
 
-  document.getElementById('products-count').textContent =
-    `${familyMap.size} keluarga wangian · ${filtered.length} wangian`;
-
-  container.innerHTML = '';
-
-  familyMap.forEach((products, family) => {
-    const rep         = pickRepresentative(products);
-    const othersCount = products.length - 1;
-    const encodedFam  = encodeURIComponent(family);
-
-    const section = document.createElement('div');
-    section.className = 'family-section';
-    section.innerHTML = `
-      <div class="family-product-row" id="fam-${encodedFam}">
-        ${buildProductCard(rep)}
-      </div>`;
-
-    container.appendChild(section);
-  });
+  container.innerHTML = filtered.map(p => buildProductCard(p)).join('');
 }
 
 /* Toggle expand/collapse a family row */
