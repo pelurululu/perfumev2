@@ -143,6 +143,7 @@ async function init() {
   await loadPricing();
   await loadProducts();
   refreshCartUI();
+  loadScentFamiliesForMega();
 }
 
 /* =====================================================
@@ -194,8 +195,8 @@ function buildProductCard(p) {
       </div>
       <div class="product-card-info">
         <p class="card-inspired">Terinspirasi oleh ${p.inspired_by}</p>
-        <h3 class="card-name">${p.name}</h3>
-        <p class="card-family">${p.family}${p.notes ? ' · ' + p.notes : ''}</p>
+        <h3 class="card-name">${p.family}</h3>
+        <p class="card-family">${p.notes || ''}</p>
         <div class="card-prices">
           <span class="card-price-from">Dari</span>
           <span class="card-price-main">RM ${pr['10ml'].promo}</span>
@@ -240,15 +241,6 @@ function renderGrid() {
     const section = document.createElement('div');
     section.className = 'family-section';
     section.innerHTML = `
-      <div class="family-header">
-        <div class="family-header-left">
-          <h2 class="family-name">${family}</h2>
-          <span class="family-count">${products.length} wangian</span>
-        </div>
-        ${othersCount > 0
-          ? `<button class="family-see-all" onclick="expandFamily('${encodedFam}')">Lihat ${othersCount} lagi →</button>`
-          : ''}
-      </div>
       <div class="family-product-row" id="fam-${encodedFam}">
         ${buildProductCard(rep)}
       </div>`;
@@ -597,19 +589,7 @@ function handleOrderSubmit() {
 /* =====================================================
    SEARCH
 ===================================================== */
-document.getElementById('search-input').addEventListener('input', function() {
-  searchQuery = this.value.toLowerCase().trim();
-  document.getElementById('search-clear').style.display = searchQuery ? 'block' : 'none';
-  clearTimeout(searchDebounce);
-  searchDebounce = setTimeout(renderGrid, 240);
-});
-
-function clearSearch() {
-  document.getElementById('search-input').value = '';
-  searchQuery = '';
-  document.getElementById('search-clear').style.display = 'none';
-  renderGrid();
-}
+/* search removed */
 
 /* =====================================================
    NAV LINKS
@@ -628,9 +608,57 @@ document.getElementById('nav-unisex').addEventListener('click', e => {
 });
 document.querySelector('.nav-logo').addEventListener('click', e => { e.preventDefault(); window.location.href = 'index.php'; });
 document.getElementById('nav-cart-btn').addEventListener('click', openCart);
-document.getElementById('hamburger').addEventListener('click', () => { window.location.href = 'index.php'; });
-document.getElementById('nav-search-btn').addEventListener('click', () => { document.getElementById('search-input').focus(); });
+document.getElementById('hamburger').addEventListener('click', () => { openMegaMenu(); });
+document.getElementById('nav-search-btn').addEventListener('click', () => { openMegaMenu(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeProductModal(); closeCart(); closeOrderModal(); } });
+
+/* =====================================================
+   MEGA MENU — populate scent family grids
+===================================================== */
+async function loadScentFamiliesForMega() {
+  try {
+    const rows = await sbFetch('scent_families?active=eq.true&order=sort_order.asc');
+    if (!rows || !rows.length) return renderFallbackFamiliesMega();
+    const grids = {
+      m: document.getElementById('mgrid-m'),
+      w: document.getElementById('mgrid-w'),
+      u: document.getElementById('mgrid-u')
+    };
+    Object.values(grids).forEach(g => { if (g) g.innerHTML = ''; });
+    rows.forEach(fam => {
+      (fam.genders || 'mwu').split('').forEach(g => {
+        if (!grids[g]) return;
+        const href = 'koleksi.php?gender=' + g + (fam.slug ? '&family=' + encodeURIComponent(fam.slug) : '');
+        const a = document.createElement('a');
+        a.href = href;
+        a.className = 'mega-item';
+        a.innerHTML = '<div class="mega-item-bg" style="background-color:#1a1a2a;' +
+          (fam.image_url ? 'background-image:url(\'' + fam.image_url + '\');background-size:cover;background-position:center;' : '') +
+          '"></div><div class="mega-item-overlay"></div><div class="mega-item-label">' + fam.name + '</div>';
+        grids[g].appendChild(a);
+      });
+    });
+  } catch(e) { renderFallbackFamiliesMega(); }
+}
+
+function renderFallbackFamiliesMega() {
+  const fallback = {
+    m: [['Woody & Smoky','#1a1a2e'],['Fresh & Aquatic','#0d1a2e'],['Citrus & Aromatic','#1a1400'],['Oriental & Spicy','#2e0d0d'],['Fougere','#0d2e0d'],['Bestsellers','#1a1a1a']],
+    w: [['Floral','#2e0d1a'],['Rose & Oud','#1a0a0a'],['Sweet & Gourmand','#1a0d00'],['Oriental & Warm','#1a1000'],['Fresh & Light','#0d1a1a'],['Bestsellers','#1a1a1a']],
+    u: [['Woody','#1a1a0d'],['Green & Earthy','#0d1a0d'],['Aquatic','#0d1a2e'],['Clean & Musky','#1a1a2e'],['Bestsellers','#1a1a1a']]
+  };
+  Object.entries(fallback).forEach(([g, items]) => {
+    const grid = document.getElementById('mgrid-' + g);
+    if (!grid) return;
+    items.forEach(([name, bg]) => {
+      const a = document.createElement('a');
+      a.href = 'koleksi.php?gender=' + g;
+      a.className = 'mega-item';
+      a.innerHTML = '<div class="mega-item-bg" style="background:' + bg + '"></div><div class="mega-item-overlay"></div><div class="mega-item-label">' + name + '</div>';
+      grid.appendChild(a);
+    });
+  });
+}
 
 /* =====================================================
    KICK OFF
