@@ -594,23 +594,34 @@ function handleOrderSubmit() {
 /* =====================================================
    NAV LINKS
 ===================================================== */
-document.getElementById('nav-men').addEventListener('click', e => {
-  e.preventDefault(); currentGender = 'm'; updateNavActiveState(); renderGrid();
-  const url = new URL(window.location); url.searchParams.set('gender', 'm'); window.history.pushState({}, '', url);
+document.addEventListener('DOMContentLoaded', () => {
+  const navMen    = document.getElementById('nav-men');
+  const navWomen  = document.getElementById('nav-women');
+  const navUnisex = document.getElementById('nav-unisex');
+  const navLogo   = document.querySelector('.nav-logo');
+  const navCart   = document.getElementById('nav-cart-btn');
+  const hamburger = document.getElementById('hamburger');
+  const navSearch = document.getElementById('nav-search-btn');
+
+  if (navMen) navMen.addEventListener('click', e => {
+    e.preventDefault(); currentGender = 'm'; updateNavActiveState(); renderGrid();
+    const url = new URL(window.location); url.searchParams.set('gender', 'm'); window.history.pushState({}, '', url);
+  });
+  if (navWomen) navWomen.addEventListener('click', e => {
+    e.preventDefault(); currentGender = 'w'; updateNavActiveState(); renderGrid();
+    const url = new URL(window.location); url.searchParams.set('gender', 'w'); window.history.pushState({}, '', url);
+  });
+  if (navUnisex) navUnisex.addEventListener('click', e => {
+    e.preventDefault(); currentGender = 'u'; updateNavActiveState(); renderGrid();
+    const url = new URL(window.location); url.searchParams.set('gender', 'u'); window.history.pushState({}, '', url);
+  });
+  if (navLogo)   navLogo.addEventListener('click', e => { e.preventDefault(); window.location.href = 'index.php'; });
+  if (navCart)   navCart.addEventListener('click', openCart);
+  if (hamburger) hamburger.addEventListener('click', () => { openMegaMenu(); });
+  if (navSearch) navSearch.addEventListener('click', () => { openMegaMenu(); });
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeProductModal(); closeCart(); closeOrderModal(); } });
 });
-document.getElementById('nav-women').addEventListener('click', e => {
-  e.preventDefault(); currentGender = 'w'; updateNavActiveState(); renderGrid();
-  const url = new URL(window.location); url.searchParams.set('gender', 'w'); window.history.pushState({}, '', url);
-});
-document.getElementById('nav-unisex').addEventListener('click', e => {
-  e.preventDefault(); currentGender = 'u'; updateNavActiveState(); renderGrid();
-  const url = new URL(window.location); url.searchParams.set('gender', 'u'); window.history.pushState({}, '', url);
-});
-document.querySelector('.nav-logo').addEventListener('click', e => { e.preventDefault(); window.location.href = 'index.php'; });
-document.getElementById('nav-cart-btn').addEventListener('click', openCart);
-document.getElementById('hamburger').addEventListener('click', () => { openMegaMenu(); });
-document.getElementById('nav-search-btn').addEventListener('click', () => { openMegaMenu(); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeProductModal(); closeCart(); closeOrderModal(); } });
 
 /* =====================================================
    MEGA MENU — populate scent family grids
