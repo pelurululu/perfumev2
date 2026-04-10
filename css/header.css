@@ -338,7 +338,7 @@
   position: fixed;
   inset: 0;
   background: #fff;
-  z-index: 790;
+  z-index: 1050;
   opacity: 0;
   pointer-events: none;
   transform: translateY(-8px);
